@@ -1,178 +1,92 @@
-# dsh-celebrate
+# 彩纸礼炮 · dsh-celebrate
 
-Agent-triggered **celebration confetti cannon** for the DeepSeek Harness Web UI.
+面向 DeepSeek Harness Web UI 的「彩纸礼炮」插件。启用后，让智能体放个礼炮（例如对它说
+“放个礼炮”“庆祝一下”），屏幕底部会向上喷出放大的正面 emoji，划出高高的抛物线后
+直接落出屏幕外；同时，bundle 内置的迪斯科灯子图层会在屏幕顶端降下一颗
+随机彩色镜面格球：它真实地 3D 旋转，采用 3渲2 分层着色，并带有放射光线；等最后一颗
+彩纸 emoji 消失后再缓入式收回。
 
-When the agent calls the `celebrate` tool (for example because you said
-“放个礼炮” or “庆祝一下”), the Web page launches enlarged emoji from the bottom
-edge of the screen, lets them shoot up high, then fall back under gravity and
-drop out of the bottom of the screen again — nothing sticks to the bottom edge.
-The bundle's **built-in disco sub-layer** drops a spinning mirror-tile disco ball
-in at the top of the screen for the same moment and retracts it once the last
-emoji has disappeared.
+迪斯科礼炮灯是**本 bundle 内的子插件组件**，不是需要单独安装的插件：同一个包里包含
+两个组件行，安装本 bundle 即得到全部能力；在
+「插件 → 已安装插件 → 彩纸礼炮 → 包含的组件」里可以分别开关彩纸礼炮和迪斯科灯。
 
-The disco lamp is the bundle's **sub-plugin component**: a second Loader row
-whose localized name and description come from `disco/locale/*.json`. The lamp
-layer itself is rendered by the parent client, but it only appears while that
-component is active: the component owns a small availability route, and the
-client checks it before every burst. Installing this bundle deploys both
-components; the Plugin Manager's bundle detail page lists them separately, so
-the confetti cannon and the lamp can be switched on or off independently.
+![彩纸与旋转灯球](docs/celebration.jpg)
 
-## Screenshots
+## 安装
 
-A burst: 60 enlarged emoji shoot up from the bottom edge while the lamp spins at
-the top of the screen.
+仓库根目录就是一个零依赖、免构建的插件包：
 
-![Confetti burst and disco lamp](docs/celebration.jpg)
-
-The bundle detail page lists both components with their own name, description,
-icon and switch:
-
-![Bundle components](docs/components.jpg)
-
-## When it fires
-
-The tool description asks the agent to call it for phrases such as:
-
-- 放个礼炮 / 放礼花 / 来点彩纸 / 撒花
-- 庆祝一下 / 庆祝成功 / 恭喜恭喜 / 开香槟
-- celebrate / congrats / party / confetti
-
-It is explicitly told **not** to fire for bad news, failures, grief, or routine
-successes the user did not ask to celebrate.
-
-## Emoji policy
-
-Only positive, festive emoji are used — never sad, angry, hurt or otherwise
-negative ones — and both whales are always part of every burst:
-`🐋` (first particle) and `🐳` (second particle). The rest are drawn from a
-positive palette: 🎉 🎊 🎈 🎁 ✨ 🌟 ⭐ 🥳 😄 😁 🤩 🥰 💖 💛 💚 💙 💜 🌈 🍰 🎂 🍭
-🍬 🌸 🌼 🌻 🦋 ☀️.
-
-Each burst uses **60 emoji**, at roughly **54–108 px** (double the original
-size), scaled to the viewport height. A second burst while the first is still in
-flight adds a new wave (hard cap 280 live particles).
-
-## Install
-
-The bundle is a plain, dependency-free package; the repository root *is* the
-package (no build step, no runtime dependencies).
-
-```powershell
+```bash
 git clone https://github.com/qwunros/dsh-celebrate
-dsh plugin --profile web add link:<path-to-the-clone>
+dsh plugin --profile web add link:<克隆目录的路径>
 ```
 
-In the Web UI you can also use **插件 → 添加插件 → 本地目录** and pick the
-cloned directory.
+也可以在 DSH 的「插件 → 添加插件 → 本地目录」中选择克隆下来的目录。
+安装后默认启用两个组件，无需再安装第二个包。
 
-Enabling it registers the tool, the confetti component and the disco component
-together. There is no second package to install.
+## 分别开关
 
-### Separate switches
+打开 **插件 → 已安装插件 → 彩纸礼炮 → 包含的组件**，会看到两行，各带一个开关：
 
-The bundle contains two Loader components:
+- **彩纸礼炮**（`dsh-celebrate`）：工具、彩纸层，以及受开关控制的灯图层；
+- **迪斯科礼炮灯**（`dsh-celebrate-disco`）：灯子组件，自带名称、描述、图标和独立开关。
 
-- `dsh-celebrate` — the `celebrate` tool, the confetti layer and the lamp layer;
-- `dsh-celebrate-disco` — the lamp sub-plugin component (nested package under
-  `disco/`, host-only availability route).
+![bundle 详情：两个组件各有名称、描述和独立开关](docs/components.jpg)
 
-Open **插件 → 已安装插件 → 彩纸礼炮 → 包含的组件**; each component has its own
-name, description, icon and switch. Turning the disco component off leaves the
-confetti cannon fully working (and vice versa). Disabling the whole bundle
-disables both.
+关掉灯组件后，放礼炮仍然只有彩纸；关掉主组件后灯不会亮，但两个组件仍随 bundle 一起安装。
+整个 bundle 的总开关会同时关掉两者。
 
-## How it works
+## 功能
+
+- **触发**：向所有智能体注册 `celebrate` 工具，工具描述明确要求“放个礼炮”
+  “庆祝一下”“恭喜”“撒花”“celebrate”“congrats”等表述时调用，并要求不要用于坏消息、
+  失败或悲伤场景。
+- **彩纸**：每次 60 颗 emoji（可调），尺寸约为原来的 2 倍（约 54–108px）；从屏幕底端
+  以高抛物线向上喷出，重力回落，完全越过底边后移除，不会卡在屏幕底部。emoji 只用
+  正面、喜庆的图案，并保证每次都包含 🐋 和 🐳 两颗鲸鱼。
+- **迪斯科灯（bundle 内置子插件）**：屏幕顶端降下一颗随机彩色镜面格球，采用 canvas
+  透视投影做出真实 3D 旋转；每格颜色随机，光照量化为三档平涂色块（3渲2），配白色
+  高光和 12 道旋转光线；降下用 ease-out，收回用 ease-in。彩纸图层在最后
+  一颗 emoji 消失时派发 `dsh-celebrate:settled`，灯随即收回；灯另有 12 秒安全超时。
+- **风格**：灯球是平视视角的 3D 格球（不倾斜、无投影阴影）+ 3渲2 平涂分色、深色
+  勾边与高光；光线为半透明硬边三角形，整体仍是干净的平面化插画感。
+
+## 结构
 
 ```text
-user: “放个礼炮”
-  → agent calls tool `celebrate`              (Host half, index.js)
-  → Host broadcasts an SSE frame               GET /dsh-celebrate/events
-  → confetti client receives `celebrate`       (dsh-celebrate, shell.overlay)
-  → confetti layer spawns emoji and dispatches `dsh-celebrate:burst`
-  → client asks GET /dsh-celebrate/disco       (owned by the disco component)
-  → only if that route answers JSON, the lamp shows
-  → the last confetti emoji leaves the screen
-  → confetti layer dispatches `dsh-celebrate:settled`
-  → disco lamp retracts with an ease-in transition
+index.js            Host：celebrate 工具 + GET /dsh-celebrate/events (SSE)
+client.js           彩纸物理 + 受开关控制的迪斯科灯图层
+disco/              迪斯科灯子组件（host-only 子路径行）
+  index.js          Host：GET /dsh-celebrate/disco 可用性路由（行存在即灯开启）
+  locale/{en,zh}.json 组件名称与描述
+  icon.svg          组件图标
+cordis.patch.yml    两个组件行的 Loader 声明
+locale/{en,zh}.json bundle 显示文本
+icon.svg            原创扁平礼炮图标
 ```
 
-The browser routes are document-relative (`dsh-celebrate/events`,
-`dsh-celebrate/disco`) the same way the shipped HMR channel addresses
-`plugins/events`, so they also work when the page is mounted under a directory.
-The SSE stream is read through `globalThis.__DSH_TRANSPORT__.fetch` when the
-shell provides one, otherwise through the browser's `EventSource`.
+包零运行时依赖（只使用页面自带的 React 与 DSH 服务），以本地目录 `link:` 安装即可，
+不需要构建步骤。
 
-### Component contract (inside this bundle)
+## 两个组件与图层
 
-The two components are separate Loader rows; the lamp's rendering lives in the
-parent client and is gated by the sub-plugin's availability route, so either
-component can be switched off without touching the other:
-
-| Component | Loader form | Overlay entry | Role |
-| --- | --- | --- | --- |
-| `dsh-celebrate` | package root (`index.js`/`client.js`) | `dsh-celebrate.confetti` (order 20), `dsh-celebrate.disco` (order 10) | Confetti emoji, plus the lamp layer it gates at runtime |
-| `dsh-celebrate-disco` | host-only subpath (`dsh-celebrate/disco`) | — | Owns `GET /dsh-celebrate/disco`; its presence is the lamp switch |
-
-The parent client swaps between the two `window` events:
-
-| Event | Payload | Meaning |
+| 组件 | 图层 id（order） | 作用 |
 | --- | --- | --- |
-| `dsh-celebrate:burst` | `detail.seq`, `detail.count` | A new burst started; check the disco route and show the lamp if enabled. |
-| `dsh-celebrate:settled` | none | Every emoji of the pool has disappeared; retract the lamp. |
+| `dsh-celebrate` | `dsh-celebrate.confetti` (20) + `dsh-celebrate.disco` (10) | 彩纸 emoji；灯图层由父客户端渲染并受子组件开关控制 |
+| `dsh-celebrate-disco` | —（host-only） | 注册 `GET /dsh-celebrate/disco`；有这条路由才亮灯 |
 
-That makes the lamp follow the actual animation instead of a guessed timer. The
-lamp also has a 12 s safety timeout in case the confetti layer is torn down
-mid-animation.
+两个组件通过「可用性路由 + `window` 事件」联动：`dsh-celebrate:burst` 时父客户端先询问
+`/dsh-celebrate/disco`，仅当子组件启用（路由返回 JSON）才显示灯；`dsh-celebrate:settled`
+收灯。因此灯跟随实际动画结束，而不是靠猜时间。
 
-## Disco sub-plugin
+## 说明
 
-- The component row is host-only and carries its own localized name,
-  description and icon (`disco/locale/*.json`, `disco/icon.svg`). The bundle
-  export map re-exports them as `./disco/locale/*.json` and `./disco/icon` so
-  the Plugin Manager can read them for the subpath row.
-- A canvas-rendered **mirror-tile ball** (120 px): a UV sphere of quads, each tile
-  with its own random colour from a 16-colour palette, dark grout and a crisp dark
-  rim.
-- Real **3D rotation** in a level (eye-level) view: no tilt, the sphere spins
-  around Y; quads are projected with perspective, foreshortened at the edges and
-  painted back to front. Near tiles are larger, far tiles smaller.
-- **3渲2 / cel-shaded**: lambert lighting from the upper-left is quantized into
-  three flat bands plus flat white glints — no cast shadow, smooth gradients or
-  photoreal reflections.
-- Twelve translucent rays fan out behind the ball and rotate once every 22 s; the
-  ball makes one turn every 7.2 s.
-- It hangs at the very top edge, strictly centred horizontally.
-- It drops in from above the viewport with `cubic-bezier(.22,1,.36,1)`
-  (ease-out), and retracts with `cubic-bezier(.55,.06,.85,.35)` (ease-in).
-
-## Tunables
-
-Values live in the source because the bundle intentionally has no package
-dependencies (no Schemastery/Config):
-
-- `DEFAULT_EMOJI_COUNT` (`60`) and `MAX_EMOJI` (`280`) in `index.js` /
-  `client.js`;
-- the launch apex, apex time, gravity and the 2× emoji size in
-  `client.js → makeParticle`;
-- the disco palette, tile grid and spin durations in `client.js → BALL_*` /
-  `DISCO_*`.
-
-## Files
-
-| File | Role |
-| --- | --- |
-| `index.js` | Host half: `celebrate` tool + `/dsh-celebrate/events` SSE route |
-| `client.js` | Confetti physics and the gated disco layer |
-| `disco/index.js` | Host-only sub-plugin component: `GET /dsh-celebrate/disco` availability route |
-| `disco/locale/*.json`, `disco/icon.svg` | Component name, description and icon |
-| `cordis.patch.yml` | Two Loader rows for the bundle |
-| `locale/en.json`, `locale/zh.json` | Bundle title/description |
-| `icon.svg` | Original flat party-popper icon |
-| `docs/*.jpg` | README screenshots (cropped to the app area) |
+- 需要 Web GUI（`/dsh-celebrate/events` 由 `webServer` 提供）；没有 Web 端的 profile
+  里工具仍然存在，只是没有可以播放动画的页面。
+- 修改 `client.js` 后，DSH 的客户端 HMR 会在约 0.5 秒内把新 bundle 推给已打开的页面；
+  如果页面没有更新，刷新一次即可。
+- 卸载：`dsh plugin --profile web remove dsh-celebrate`。
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
-
-Chinese README: [README.zh-CN.md](README.zh-CN.md).
+MIT，见 [LICENSE](LICENSE)。English README: [README.en.md](README.en.md)。
