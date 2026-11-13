@@ -1,0 +1,45 @@
+{
+  "name": "dsh-celebrate",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Agent-triggered celebration confetti cannon for the DeepSeek Harness Web UI, with a separately switchable disco lamp component.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qwunros/dsh-celebrate.git"
+  },
+  "homepage": "https://github.com/qwunros/dsh-celebrate#readme",
+  "bugs": {
+    "url": "https://github.com/qwunros/dsh-celebrate/issues"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./disco": "./disco/index.js",
+    "./disco/locale/*.json": "./disco/locale/*.json",
+    "./disco/icon": "./disco/icon.svg",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "disco",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-renderer"
+      ]
+    }
+  },
+  "license": "MIT"
+}

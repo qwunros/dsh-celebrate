@@ -1,0 +1,9 @@
+# The bundle deploys two independently switchable plugin rows:
+# - dsh-celebrate:        the celebrate tool + confetti layer (client bundle)
+# - dsh-celebrate/disco:  the host-only disco lamp component (owns the
+#                         availability route; the parent client renders the lamp)
+- insert:
+    - id: dsh-celebrate
+      name: dsh-celebrate
+    - id: dsh-celebrate-disco
+      name: dsh-celebrate/disco

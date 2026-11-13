@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="#0f172a"/>
+  <path d="M32 3 V9" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+  <rect x="25" y="8" width="14" height="6" rx="2" fill="#94a3b8"/>
+  <circle cx="32" cy="32" r="18" fill="#38bdf8"/>
+  <path d="M32 32 L32 14 A18 18 0 0 1 47.6 23 Z" fill="#ff5ea8"/>
+  <path d="M32 32 L47.6 23 A18 18 0 0 1 47.6 41 Z" fill="#ffd93d"/>
+  <path d="M32 32 L47.6 41 A18 18 0 0 1 32 50 Z" fill="#4ade80"/>
+  <path d="M32 32 L32 50 A18 18 0 0 1 16.4 41 Z" fill="#38bdf8"/>
+  <path d="M32 32 L16.4 41 A18 18 0 0 1 16.4 23 Z" fill="#a78bfa"/>
+  <path d="M32 32 L16.4 23 A18 18 0 0 1 32 14 Z" fill="#fb923c"/>
+  <g clip-path="url(#ball)" stroke="rgba(255,255,255,.42)" stroke-width="1">
+    <path d="M10 22 H54 M10 32 H54 M10 42 H54"/>
+    <path d="M22 10 V54 M32 10 V54 M42 10 V54"/>
+  </g>
+  <defs>
+    <clipPath id="ball"><circle cx="32" cy="32" r="18"/></clipPath>
+  </defs>
+  <circle cx="32" cy="32" r="3.2" fill="#ffffff" opacity=".92"/>
+  <path d="M8 20 L3 16 L8 32 Z" fill="#ffd93d" opacity=".85"/>
+  <path d="M56 20 L61 16 L56 32 Z" fill="#ff5ea8" opacity=".85"/>
+  <circle cx="12" cy="46" r="2" fill="#4ade80"/>
+  <circle cx="52" cy="46" r="2" fill="#38bdf8"/>
+</svg>

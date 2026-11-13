@@ -1,0 +1,13 @@
+{
+  "name": "dsh-celebrate-disco",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Disco lamp sub-plugin component of dsh-celebrate: an independently switchable host row that enables the lamp.",
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "license": "MIT"
+}
